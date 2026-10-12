@@ -15,8 +15,9 @@ Identify **seams before parallelizing**: boundaries where tasks can own separate
 - Git remote: `origin`, pointing to `https://github.com/rymy-niskala/roblox-roguelike.git`.
 - Default integration branch: `main`.
 - Intended domain: a Roblox roguelike project. Gameplay requirements and architecture must come from the user and GitHub context, not assumptions based on the name.
-- At creation of this guide, the tracked project contained only an empty `README.md`. There was no game implementation, project mapping, dependency manifest, automated test suite, or CI configuration.
-- Do not invent build, lint, or test commands. Discover the actual tools from tracked configuration as the repository evolves. Update this guide when the initial implementation establishes those conventions.
+- Baseline: import of `frrazer/roblox-game-boilerplate` at commit `d389bbd44a6f83b01cc2a58a2b0cabe1b7112cce`. The boilerplate supplies Rojo mapping, strict Luau source, Wally dependencies, lifecycle/data/network/UI frameworks, and install/check scripts. No roguelike-specific gameplay is introduced.
+- Use `./scripts/install.ps1` for setup and `./scripts/check.ps1` for formatting, analysis, and build verification. Tools are pinned in `aftman.toml`. Keep the GitHub-first coordination and task-worktree policy in this guide.
+- Before implementation, read [docs/Boilerplate.md](docs/Boilerplate.md) in full for the imported architecture, coding conventions, Studio setup, package ownership, and validation rules. This guide's project identity and coordination policy remain applicable.
 
 ## Start every task with discovery
 
@@ -99,7 +100,7 @@ Keep commits narrow and avoid unrelated formatting, renaming, or whole-file rewr
 
 ## Roblox implementation guardrails
 
-When game code is introduced:
+For the imported boilerplate and future game code:
 
 - Establish and document the repository-to-Roblox Studio workflow before assuming Rojo, Wally, a Luau analyzer, formatter, or test framework is installed or adopted.
 - Keep authoritative gameplay and rewards on the server. Treat client requests as untrusted and validate their payloads, permissions, rates, and state transitions.
@@ -113,7 +114,11 @@ When game code is introduced:
 - The change satisfies the task's recorded acceptance criteria and stays within its assigned seam.
 - Inspect `git diff --check`, the actual diff, and `git status --short`; ensure no unrelated changes or generated artifacts are included.
 - Run the repository's applicable checks once they exist. Report exact commands and observed results. If a required tool or Studio session is unavailable, clearly identify the unverified portion.
-- For documentation-only changes in the current scaffold, check accuracy against repository/GitHub state and validate formatting; there is no established game build or test command yet.
+- Run `./scripts/check.ps1` after implementation changes. Documentation-only changes also require accuracy and diff checks. A successful code-only Rojo build does not replace Studio Play or multiplayer testing.
 - Verify published changes by reading back the exact GitHub PR, commit, comment, or check target before claiming success. Do not equate a push with passing CI or an approved merge.
 - Summarize changed files, validation evidence, outstanding risks, and the PR URL when one was created. A local-only file delivery must be clearly described as uncommitted/unpublished.
 - Update project documentation and this guide when tools, layout, or interfaces change. Keep durable development context on GitHub so the next agent can continue without access to the previous conversation.
+
+## Project agent skills
+
+Seven Roblox skills and their supporting files are stored in `.hermes/skills`. They supplement this guide and `docs/Boilerplate.md`; adapt their generic examples to the existing Packet, Replica, ProfileStore, Input, Trove, lifecycle, and UIController architecture rather than introducing competing systems. Keep UI authored in Studio unless the user explicitly prefers code-authored UI. Follow the project naming conventions, `--!strict`, no-code-comments rule, and cleanup ownership when applying skill examples.
